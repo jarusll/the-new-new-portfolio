@@ -5,15 +5,26 @@ import { render } from 'astro:content'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
-  return posts
+  const logs = await getCollection('logs')
+
+  const postPaths = posts
     .filter((post) => !post.id.startsWith('_'))
     .map((post) => ({
       params: { slug: post.id },
       props: post
     }))
+
+  const logPaths = logs
+    .filter((log) => !log.id.startsWith('_'))
+    .map((log) => ({
+      params: { slug: log.id },
+      props: log
+    }))
+
+  return [...postPaths, ...logPaths]
 }
 
-type Props = CollectionEntry<'posts'>
+type Props = CollectionEntry<'posts'> | CollectionEntry<'logs'>
 
 const post = Astro.props
 const { Content, remarkPluginFrontmatter } = await render(post)
