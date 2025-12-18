@@ -9,10 +9,13 @@ import GradientMask from '@/components/ui/GradientMask.astro'
 import { themeConfig } from '@/config'
 
 // Fetch logs from the "logs" collection
-const logs = await getCollection('logs')
+const logs = (await getCollection('logs')).sort((a, b) => {
+  const numA = parseFloat(a.data.title) || 0;
+  const numB = parseFloat(b.data.title) || 0;
+  return numB - numA;
+});
 
 const { title, description } = Astro.props
-delete logs[0].body
 ---
 
 <BaseLayout title={title} description={description} type="page">
