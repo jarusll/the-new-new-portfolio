@@ -1,0 +1,146 @@
+---
+title: "In Place Quick Sort"
+author: ["Suraj Yadav"]
+createdAt: 2025-09-06
+draft: false
+description: Dialogue with a quicksort prodigy
+tags:
+    - i-am-sure-this-matters
+---
+
+- Do you know Quicksort?
+
+Yes I do, because I am recursion God who has cracked the `Y Combinator` thanks to `The Little Schemer` but lets hope no one asks me that in an interview.
+
+Also here's my quicksort implementation.
+```python
+def quicksort(array):
+	if len(array) <= 1:
+		return array
+	# use last element as pivot
+	pivot = array[-1]
+	# assuming no duplicates
+	left = [x for x in array if x < pivot]
+	right = [y for y in array if y > pivot]
+	return quicksort(left) + [pivot] + quicksort(right)
+```
+
+But people squint at me and accuse me of using extra memory.
+
+- How do you respond to those people?
+
+I take a deep breath and pull out my whiteboard and scribble IN PLACE QUICKSORT
+
+- How would you do it "in place"?
+
+Since this requires partitioning, I suppose we could partition the array in place into 2 parts and recursively sort the partitions in place.
+
+- How would you partition it?
+
+I guess we could split the array into 2 partitions by having 1 boundary. We can traverse the array and move `items < pivot` to the left side of the partition, and naturally the only items in the right partition will be `items > pivot`, assuming there are no duplicates going further.
+
+- How would you move the items in place?
+
+Easy, Swap them.
+
+- Can I see an example?
+Sure, I am a visual learner so here you go.
+
+```
+[ 7 2 1 8 6 3 5 4 ]
+```
+
+Considering the last item as pivot(More on that later), we can partition the array as left having 0 items.
+
+```
+[ ][ 7 2 1 8 6 3 5 ] 4
+     ^               ^
+```
+
+Since `7 > 4`, 7 can stay on the right partition
+
+```
+[ ][ 7 2 1 8 6 3 5 ] 4
+      ^             ^
+```
+
+`2 < 4`, we can move it to the left partition
+
+```
+[ 2 ][ 7 1 8 6 3 5 ] 4
+         ^           ^
+```
+
+The first iteration of quicksort will result in the following array
+```
+[ 2 1 3 ][ 7 8 6 5 ] 4
+```
+
+- But how do you do swaps?
+
+I guess we could maintain an index as boundary. At the beginning, since we don't have any items on the left we can use 0 as the boundary. So for the first item < pivot with index, we would swap out item[index] and item[boundary]
+
+```python
+array = [...]
+def inplace_quicksort(...):
+	...
+	boundary = 0
+	# use last element as pivot
+	pivot = array[-1]
+	# iterate till second last element
+	for index in range(len(array) - 2):
+		item = array[index]
+		if item < pivot:
+			array[boundary], array[index] = array[index], array[boundary]
+	...
+```
+
+- Where does boundary lie, in the left or right partition?
+
+Right
+
+- What if the first element < pivot and thus needs to be in the left partition?
+
+No worries, we iterate from the beginning that would result in the same swap. No harm done.
+
+- Can you code that up?
+
+```python
+array = [23, 87, 5, 99, 42]
+
+def inplace_quicksort(left, right):
+	global array
+	if left > right:
+		return
+	if right - left + 1 <= 1:
+		return
+	# use last element as pivot
+	pivot = array[right]
+	boundary = left
+	# iterate till second last element
+	for index, item in enumerate(array[left:right]):
+		index = left + index
+		if item < pivot:
+			array[boundary], array[index] = array[index], array[boundary]
+			boundary = boundary + 1
+	inplace_quicksort(left, boundary - 1)
+	inplace_quicksort(boundary, right - 1)
+	# place pivot in between left & right partitions
+	# by shifting it from extreme right to the boundary position
+	while right > boundary:
+		array[right], array[right - 1] = array[right - 1], array[right]
+		right = right - 1
+```
+
+- Does pivot always has to be the last item?
+
+No, we can use any random item from the array as pivot. Although, a good pivot partitions left and right equally.
+
+- How can I get the best pivot?
+
+Finding the med...
+https://stackoverflow.com/questions/164163/quicksort-choosing-the-pivot here you go.
+
+- Are you a god?
+
+I might be.

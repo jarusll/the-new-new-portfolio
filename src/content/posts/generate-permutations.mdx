@@ -1,0 +1,89 @@
+---
+title: "Generate Permutations"
+author: ["Suraj Yadav"]
+createdAt: 2022-05-28
+draft: false
+description: Discoverability
+tags:
+    - solution
+---
+
+## What is a permutation?
+
+**What is the permutation of `{ }`?**
+
+`{ }`
+
+**What is the permutation of `{1}`?**
+
+`{1}`
+
+**What is the permutation of `{1, 2}`?**
+
+- `{1, 2}`
+- `{2, 1}`
+
+**What is the permutation of `{1, 2, 3}`?**
+
+- `{1, 2, 3}`
+- `{1, 3, 2}`
+- `{2, 1, 3}`
+- `{2, 3, 1}`
+- `{3, 1, 2}`
+- `{3, 2, 1}`
+
+**Which of them start with `1`?**
+
+- `{1, 2, 3}`
+- `{1, 3, 2}`
+
+**What are the rest of these elements?**
+
+- `{2, 3}`
+- `{3, 2}`
+
+**Do they resemble something?**
+
+- No
+
+**What about the permutation of `{2, 3}`?**
+
+- Yes
+
+**What is `append x` on `{y, z}`?**
+
+<ul>
+    <li>{`{x, y, z}`}</li>
+</ul>
+
+**What is `append x` on each of `{y, z}`?**
+
+- `{x, y}`
+- `{x, z}`
+
+**Can we say the permutation of `{1, 2, 3}` = `{append 1 on each permutation of {2, 3}}, {append 2 on each permutation of {1, 3}}, {append 3 on each permutation of {1, 2}}`?**
+
+- That's a mouthful.
+
+**What is `{append 1 on each permutation of {2, 3}}`?**
+
+- `{append 1 on each permutation of {2, 3}}`
+- `{append 1 on each {{2, 3}, {3, 2}}}`
+- `{{1, 2, 3}, {1, 3, 2}}`
+
+**What about `{append 2 on each permutation of {1, 3}}` and `{append 3 on each permutation of {1, 2}}`?**
+
+- `{{2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}}`
+
+**What do we get when we combine them all?**
+
+- `{{1, 2, 3}, {1, 3, 2}, {2, 1, 3}, {2, 3, 1}, {3, 1, 2}, {3, 2, 1}}`
+- i.e., `permutation of {1, 2, 3}`
+
+**Do you know what a permutation is now?**
+
+- Yes
+
+**Did you have fun?**
+
+- Go have some cookies.
