@@ -4,9 +4,9 @@ export const themeConfig: ThemeConfig = {
   // SITE INFO ///////////////////////////////////////////////////////////////////////////////////////////
   site: {
     website: 'https://surajyadav.net/', // Site domain
-    title: 'Suraj', // Site title
-    author: 'Suraj Yadv', // Author name
-    description: 'Minimal blog built by Astro', // Site description
+    title: 'Suraj Yadav', // Site title
+    author: 'Suraj Yadav', // Author name
+    description: 'Suraj\'s personal space', // Site description
     language: 'en-US' // Default language
   },
 
