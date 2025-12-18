@@ -21,4 +21,15 @@ const about = defineCollection({
   schema: z.object({})
 })
 
-export const collections = { posts, about }
+const logs = defineCollection({
+  // Load Markdown and MDX files in the `src/content/logs/` directory.
+  loader: glob({ base: './src/content/logs', pattern: '**/*.{md,mdx}' }),
+  // Type-check frontmatter using a schema
+  schema: () =>
+    z.object({
+      title: z.string(),
+      pubDate: z.coerce.date(),
+    })
+})
+
+export const collections = { posts, about, logs }
