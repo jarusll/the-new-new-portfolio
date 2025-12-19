@@ -6,11 +6,15 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
 <header>
   <nav>
     <a href="/">{themeConfig.site.title}</a>
-    <a href="/logs">Logs</a>
-    <a href="/projects">Projects</a>
+    <div class="nav-right">
+      <a href="/posts">Posts</a>
+      <a href="/logs">Logs</a>
+      <a href="/projects">Projects</a>
+    </div>
     <ThemeToggle />
   </nav>
 </header>
+
 <style>
   header {
     margin: 0;
@@ -19,6 +23,11 @@ import ThemeToggle from '@/components/ui/ThemeToggle.astro'
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .nav-right {
+    display: flex;
+    gap: 1rem;
+    margin-left: auto;
   }
   header a {
     font-weight: var(--font-weight-bold);
