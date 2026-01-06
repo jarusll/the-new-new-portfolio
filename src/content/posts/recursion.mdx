@@ -68,12 +68,12 @@ So can we call this `factorial0`?
 ```javascript
 ((toBeDetermined) => {
   return (n) => {
-	if (n === 0) {
-	  return 1
-	}
-	else {
-	  return n * toBeDetermined(n - 1)
-	}
+    if (n === 0) {
+      return 1
+    }
+    else {
+      return n * toBeDetermined(n - 1)
+    }
   }
 })(infinity)
 ```
@@ -82,12 +82,12 @@ So can we call this `factorial0`?
 ```javascript
 // factorial0
 (n) => {
-	if (n === 0) {
-	  return 1
-	}
-	else {
-	  return n * infinity(n - 1)
-	}
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n * infinity(n - 1)
+  }
 }
 ```
 - It matches the behavior of `factorial0`, and hence we can call it `factorial0`
@@ -111,15 +111,16 @@ Now that we have `factorial0`, can we write `factorialLessThanOrEqualTo1` as the
   }
   else {
     return n * ((o) => {
-		if (o === 0) {
-		  return 1
-		}
-		else {
-		  return o * infinity(o - 1)
-		}
-	})(n - 1)
+      if (o === 0) {
+        return 1
+      }
+      else {
+        return o * infinity(o - 1)
+      }
+    })(n - 1)
   }
 }
+
 ```
 Given that this follows the behavior of factorial for input n = 0 and n = 1, it can be called `factorialLessThanOrEqualTo1`
 
@@ -132,20 +133,20 @@ So, is the following function `factorialLessThanOrEqualTo2`?
   }
   else {
     return n * ((o) => {
-	  if (o === 0) {
-	    return 1
-	  }
-	  else {
-	    return o * ((p) => {
-			if (p === 0) {
-			  return 1
-			}
-			else {
-			  return p * infinity(p - 1)
-			}
-		})(o - 1)
-	  }
-	})(n - 1)
+      if (o === 0) {
+        return 1
+      }
+      else {
+        return o * ((p) => {
+          if (p === 0) {
+            return 1
+          }
+          else {
+            return p * infinity(p - 1)
+          }
+        })(o - 1)
+      }
+    })(n - 1)
   }
 }
 ```
@@ -156,18 +157,18 @@ Yes, I agree we can abstract out the repeating bit
 What does this look like?
 ```javascript
 ((makeFactorial) => {
-	return makeFactorial(infinity)
+  return makeFactorial(infinity)
 })(
-	(factorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * factorial(n - 1)
-			}
-		}
-	}
+  (factorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * factorial(n - 1)
+      }
+    }
+  }
 )
 ```
 - I don't know yet, I'll have to evaluate this
@@ -176,14 +177,14 @@ How would you do that?
 - I would do a single substitution. That would give us
 ```javascript
 ((factorial) => {
-	return (n) => {
-		if (n === 0) {
-			return 1
-		}
-		else {
-			return n * factorial(n - 1)
-		}
-	}
+  return (n) => {
+    if (n === 0) {
+      return 1
+    }
+    else {
+      return n * factorial(n - 1)
+    }
+  }
 })(infinity)
 ```
 
@@ -191,12 +192,12 @@ Can we reduce it further?
 - Yes we can. That would give us...
 ```javascript
 (n) => {
-	if (n === 0) {
-		return 1
-	}
-	else {
-		return n * infinity(n - 1)
-	}
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n * infinity(n - 1)
+  }
 }
 ```
 - Ayyyy, that's looks exactly like `factorial0`
@@ -205,20 +206,20 @@ Correct, So can we write `factorialLessThanOrEqualTo1` using `makeFactorial` as 
 ```javascript
 // factorialLessThanOrEqualTo1
 ((makeFactorial) => {
-	return makeFactorial(
-		makeFactorial(infinity)
-	)
+  return makeFactorial(
+    makeFactorial(infinity)
+  )
 })(
-	(factorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * factorial(n - 1)
-			}
-		}
-	}
+  (factorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * factorial(n - 1)
+      }
+    }
+  }
 )
 ```
 (please try reducing this with pen and paper if possible)
@@ -228,22 +229,22 @@ What about `factorialLessThanOrEqualTo2`?
 ```javascript
 // factorialLessThanOrEqualTo2
 ((makeFactorial) => {
-	return makeFactorial(
-		makeFactorial(
-			makeFactorial(infinity)
-		)
-	)
+  return makeFactorial(
+    makeFactorial(
+      makeFactorial(infinity)
+    )
+  )
 })(
-	(factorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * factorial(n - 1)
-			}
-		}
-	}
+  (factorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * factorial(n - 1)
+      }
+    }
+  }
 )
 ```
 
@@ -267,18 +268,18 @@ Since it doesnt matter what we pass to `makeFactorial` for the base case i.e. `f
 ```javascript
 // factorial0
 ((makeFactorial) => {
-	return makeFactorial(makeFactorial)
+  return makeFactorial(makeFactorial)
 })(
-	(factorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * factorial(n - 1)
-			}
-		}
-	}
+  (factorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * factorial(n - 1)
+      }
+    }
+  }
 )
 ```
 
@@ -287,18 +288,18 @@ Can we use the name `makeFactorial` instead of `factorial`?
 ```javascript
 // factorial0
 ((makeFactorial) => {
-	return makeFactorial(makeFactorial)
+  return makeFactorial(makeFactorial)
 })(
-	(makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(n - 1)
-			}
-		}
-	}
+  (makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(n - 1)
+      }
+    }
+  }
 )
 ```
 - But why would we want to do that?
@@ -308,18 +309,18 @@ Can we use the else branch to generate a recursive case?
 ```javascript
 // ?
 ((makeFactorial) => {
-	return makeFactorial(makeFactorial)
+  return makeFactorial(makeFactorial)
 })(
-	(makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(infinity)(n - 1)
-			}
-		}
-	}
+  (makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(infinity)(n - 1)
+      }
+    }
+  }
 )
 ```
 - Yes, this gives us `factorialLessThanOrEqualTo1` because `makeFactorial(infinity)` reduces to a function that behaves like `factorial0` as we saw above
@@ -331,18 +332,18 @@ How about feeding makeFactorial to itself?
 ```javascript
 // ?
 ((makeFactorial) => {
-	return makeFactorial(makeFactorial)
+  return makeFactorial(makeFactorial)
 })(
-	(makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(makeFactorial)(n - 1)
-			}
-		}
-	}
+  (makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(makeFactorial)(n - 1)
+      }
+    }
+  }
 )
 ```
 - This feels unnatural
@@ -357,42 +358,43 @@ Lets try, whats the output for input n = 0?
 ```javascript
 // ?
 ((makeFactorial) => {
-	return makeFactorial(makeFactorial)
+  return makeFactorial(makeFactorial)
 })(
-	(makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(makeFactorial)(n - 1)
-			}
-		}
-	}
+  (makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(makeFactorial)(n - 1)
+      }
+    }
+  }
 )
 ```
 - We can unwind this to get a flat function before applying for the input n = 0. Lets try substituting the arguments step by step
 ```javascript
 ((makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(makeFactorial)(n - 1)
-			}
-		}
-	}
-)((makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			}
-			else {
-				return n * makeFactorial(makeFactorial)(n - 1)
-			}
-		}
-	})
+  return (n) => {
+    if (n === 0) {
+      return 1
+    }
+    else {
+      return n * makeFactorial(makeFactorial)(n - 1)
+    }
+  }
+})(
+  (makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(makeFactorial)(n - 1)
+      }
+    }
+  }
+)
 ```
 
 Can we reduce it even further?
@@ -400,30 +402,33 @@ Can we reduce it even further?
 ```javascript
 // reducedStructure
 (n) => {
-	if (n === 0) {
-		return 1
-	} else {
-		return n *
-			((makeFactorial) => {
-				return (n) => {
-					if (n === 0) {
-						return 1
-					} else {
-						return n * makeFactorial(makeFactorial)(n - 1)
-					}
-				}
-			})(
-				(makeFactorial) => {
-					return (n) => {
-						if (n === 0) {
-							return 1
-						} else {
-							return n * makeFactorial(makeFactorial)(n - 1)
-						}
-					}
-				}
-			)(n - 1)
-	}
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n *
+      ((makeFactorial) => {
+        return (n) => {
+          if (n === 0) {
+            return 1
+          }
+          else {
+            return n * makeFactorial(makeFactorial)(n - 1)
+          }
+        }
+      })(
+        (makeFactorial) => {
+          return (n) => {
+            if (n === 0) {
+              return 1
+            }
+            else {
+              return n * makeFactorial(makeFactorial)(n - 1)
+            }
+          }
+        }
+      )(n - 1)
+  }
 }
 ```
 
@@ -434,56 +439,61 @@ What about n = 1?
 - We can work it out. For n = 1, it will return the else branch i.e.
 ```javascript
 1 *
-	((makeFactorial) => {
-		return (n) => {
-			if (n === 0) {
-				return 1
-			} else {
-				return n * makeFactorial(makeFactorial)(n - 1)
-			}
-		}
-	})(
-		(makeFactorial) => {
-			return (n) => {
-				if (n === 0) {
-					return 1
-				} else {
-					return n * makeFactorial(makeFactorial)(n - 1)
-				}
-			}
-		}
-	)(1 - 1)
+  ((makeFactorial) => {
+    return (n) => {
+      if (n === 0) {
+        return 1
+      }
+      else {
+        return n * makeFactorial(makeFactorial)(n - 1)
+      }
+    }
+  })(
+    (makeFactorial) => {
+      return (n) => {
+        if (n === 0) {
+          return 1
+        }
+        else {
+          return n * makeFactorial(makeFactorial)(n - 1)
+        }
+      }
+    }
+  )(1 - 1)
 ```
 
 which will reduce to...
 ```javascript
 1 *
   ((n) => {
-	if (n === 0) {
-			return 1
-		} else {
-			return n *
-				((makeFactorial) => {
-					return (n) => {
-						if (n === 0) {
-							return 1
-						} else {
-							return n * makeFactorial(makeFactorial)(n - 1)
-						}
-					}
-				})(
-					(makeFactorial) => {
-						return (n) => {
-							if (n === 0) {
-								return 1
-							} else {
-								return n * makeFactorial(makeFactorial)(n - 1)
-							}
-						}
-					}
-				)(n - 1)
-		}
-	})(0)
+    if (n === 0) {
+      return 1
+    }
+    else {
+      return n *
+        ((makeFactorial) => {
+          return (n) => {
+            if (n === 0) {
+              return 1
+            }
+            else {
+              return n * makeFactorial(makeFactorial)(n - 1)
+            }
+          }
+        })(
+          (makeFactorial) => {
+            return (n) => {
+              if (n === 0) {
+                return 1
+              }
+              else {
+                return n * makeFactorial(makeFactorial)(n - 1)
+              }
+            }
+          }
+        )(n - 1)
+    }
+  })(0)
 ```
 
 Does this seem familiar?
