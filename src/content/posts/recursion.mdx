@@ -1,0 +1,511 @@
+---
+title: Recursion
+pubDate: 2026-01-06
+---
+
+Do you know recursion?
+- Yes
+
+Do you really know recursion?
+- Yeah, I would say so
+
+No, but do you *really* know recursion?
+- Alright, I'll bite
+
+Show me the Factorial *structure*
+- Here you go
+```javascript
+// factorial
+(n) => {
+  if (n === 0) {
+    return 1
+  }
+
+  return n * factorial(n - 1)
+}
+```
+
+Could you do it if the language did not support recursion?
+- I don't know... yet but I can try
+
+What would be a good starting point?
+- Eliminating the recursive call
+
+How would you do that?
+- By abstracting out the recursive part
+```javascript
+// factorialStructure
+(toBeDetermined) => {
+  return (n) => {
+    if (n === 0) {
+      return 1
+    }
+
+    return n * toBeDetermined(n - 1)
+  }
+}
+```
+
+- How can we infer `toBeDetermined`?
+
+Lets try to reverse engineer. Can you tell that this behaves like `factorial0` for input `n = 0`?
+- Of Course, because that's the base case
+
+Does that mean we have `factorial0`?
+- Yes, as long as we never reach the recursive case
+
+---
+Side-note - Infinity
+To keep the focus of this write up on Recursion, we will assume that Infinity is just a function that never produces a value.
+```javascript
+const infinity = () => {
+  return infinity()
+}
+```
+---
+
+So can we call this `factorial0`?
+```javascript
+((toBeDetermined) => {
+  return (n) => {
+	if (n === 0) {
+	  return 1
+	}
+	else {
+	  return n * toBeDetermined(n - 1)
+	}
+  }
+})(infinity)
+```
+
+- After *reducing* it to the following,
+```javascript
+// factorial0
+(n) => {
+	if (n === 0) {
+	  return 1
+	}
+	else {
+	  return n * infinity(n - 1)
+	}
+}
+```
+- It matches the behavior of `factorial0`, and hence we can call it `factorial0`
+
+Now that we have `factorial0`, can we write `factorialLessThanOrEqualTo1` as the following?
+```javascript
+// factorialLessThanOrEqualTo1?
+(n) => {
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n * factorial0(n - 1)
+  }
+}
+
+// which reduces to
+(n) => {
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n * ((o) => {
+		if (o === 0) {
+		  return 1
+		}
+		else {
+		  return o * infinity(o - 1)
+		}
+	})(n - 1)
+  }
+}
+```
+Given that this follows the behavior of factorial for input n = 0 and n = 1, it can be called `factorialLessThanOrEqualTo1`
+
+So, is the following function `factorialLessThanOrEqualTo2`?
+```javascript
+// factorialLessThanOrEqualTo2?
+(n) => {
+  if (n === 0) {
+    return 1
+  }
+  else {
+    return n * ((o) => {
+	  if (o === 0) {
+	    return 1
+	  }
+	  else {
+	    return o * ((p) => {
+			if (p === 0) {
+			  return 1
+			}
+			else {
+			  return p * infinity(p - 1)
+			}
+		})(o - 1)
+	  }
+	})(n - 1)
+  }
+}
+```
+- Yeah, but this seems a lot. There is a lot of repetition here.
+
+Yes, I agree we can abstract out the repeating bit
+
+What does this look like?
+```javascript
+((makeFactorial) => {
+	return makeFactorial(infinity)
+})(
+	(factorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * factorial(n - 1)
+			}
+		}
+	}
+)
+```
+- I don't know yet, I'll have to evaluate this
+
+How would you do that?
+- I would do a single substitution. That would give us
+```javascript
+((factorial) => {
+	return (n) => {
+		if (n === 0) {
+			return 1
+		}
+		else {
+			return n * factorial(n - 1)
+		}
+	}
+})(infinity)
+```
+
+Can we reduce it further?
+- Yes we can. That would give us...
+```javascript
+(n) => {
+	if (n === 0) {
+		return 1
+	}
+	else {
+		return n * infinity(n - 1)
+	}
+}
+```
+- Ayyyy, that's looks exactly like `factorial0`
+
+Correct, So can we write `factorialLessThanOrEqualTo1` using `makeFactorial` as the following?
+```javascript
+// factorialLessThanOrEqualTo1
+((makeFactorial) => {
+	return makeFactorial(
+		makeFactorial(infinity)
+	)
+})(
+	(factorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * factorial(n - 1)
+			}
+		}
+	}
+)
+```
+(please try reducing this with pen and paper if possible)
+
+What about `factorialLessThanOrEqualTo2`?
+- Here you go
+```javascript
+// factorialLessThanOrEqualTo2
+((makeFactorial) => {
+	return makeFactorial(
+		makeFactorial(
+			makeFactorial(infinity)
+		)
+	)
+})(
+	(factorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * factorial(n - 1)
+			}
+		}
+	}
+)
+```
+
+So is recursion a bunch of pending operations stacked on top of each other?
+- True
+
+| factorial(0) |
+| factorial(1) |
+| factorial(2) |
+| factorial(3) |
+
+- That does work but how far can we keep going? We wouldn't want to manually compose `makeFactorial` to get `factorialLessThanEqualToN`
+
+I agree, lets see if we can automate this composition to work for all `n` values
+
+- Where would we start?
+`makeFactorial`
+
+Since it doesnt matter what we pass to `makeFactorial` for the base case i.e. `factorial0`, can we give it `makeFactorial` instead of `infinity`?
+- Sure, that would give us `factorial0` as
+```javascript
+// factorial0
+((makeFactorial) => {
+	return makeFactorial(makeFactorial)
+})(
+	(factorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * factorial(n - 1)
+			}
+		}
+	}
+)
+```
+
+Can we use the name `makeFactorial` instead of `factorial`?
+- Sure, that doesn't change the meaning. So factorial0 would look like
+```javascript
+// factorial0
+((makeFactorial) => {
+	return makeFactorial(makeFactorial)
+})(
+	(makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(n - 1)
+			}
+		}
+	}
+)
+```
+- But why would we want to do that?
+Because some names are more equal than others
+
+Can we use the else branch to generate a recursive case?
+```javascript
+// ?
+((makeFactorial) => {
+	return makeFactorial(makeFactorial)
+})(
+	(makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(infinity)(n - 1)
+			}
+		}
+	}
+)
+```
+- Yes, this gives us `factorialLessThanOrEqualTo1` because `makeFactorial(infinity)` reduces to a function that behaves like `factorial0` as we saw above
+
+Can we do this more than once?
+- How would we do that?
+
+How about feeding makeFactorial to itself?
+```javascript
+// ?
+((makeFactorial) => {
+	return makeFactorial(makeFactorial)
+})(
+	(makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(makeFactorial)(n - 1)
+			}
+		}
+	}
+)
+```
+- This feels unnatural
+
+Is it because up until now, we were feeding makeFactorial a function that behaves like factorial for smaller inputs?
+- BINGO
+
+Well, makeFactorial *IS* the creator of such functions
+- Ooo, but does it actually work?
+
+Lets try, whats the output for input n = 0?
+```javascript
+// ?
+((makeFactorial) => {
+	return makeFactorial(makeFactorial)
+})(
+	(makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(makeFactorial)(n - 1)
+			}
+		}
+	}
+)
+```
+- We can unwind this to get a flat function before applying for the input n = 0. Lets try substituting the arguments step by step
+```javascript
+((makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(makeFactorial)(n - 1)
+			}
+		}
+	}
+)((makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			}
+			else {
+				return n * makeFactorial(makeFactorial)(n - 1)
+			}
+		}
+	})
+```
+
+Can we reduce it even further?
+- Yes we can
+```javascript
+// reducedStructure
+(n) => {
+	if (n === 0) {
+		return 1
+	} else {
+		return n *
+			((makeFactorial) => {
+				return (n) => {
+					if (n === 0) {
+						return 1
+					} else {
+						return n * makeFactorial(makeFactorial)(n - 1)
+					}
+				}
+			})(
+				(makeFactorial) => {
+					return (n) => {
+						if (n === 0) {
+							return 1
+						} else {
+							return n * makeFactorial(makeFactorial)(n - 1)
+						}
+					}
+				}
+			)(n - 1)
+	}
+}
+```
+
+Do you know the answer for n = 0 now?
+- Yes, its clearly the base case i.e. 1
+
+What about n = 1?
+- We can work it out. For n = 1, it will return the else branch i.e.
+```javascript
+1 *
+	((makeFactorial) => {
+		return (n) => {
+			if (n === 0) {
+				return 1
+			} else {
+				return n * makeFactorial(makeFactorial)(n - 1)
+			}
+		}
+	})(
+		(makeFactorial) => {
+			return (n) => {
+				if (n === 0) {
+					return 1
+				} else {
+					return n * makeFactorial(makeFactorial)(n - 1)
+				}
+			}
+		}
+	)(1 - 1)
+```
+
+which will reduce to...
+```javascript
+1 *
+  ((n) => {
+	if (n === 0) {
+			return 1
+		} else {
+			return n *
+				((makeFactorial) => {
+					return (n) => {
+						if (n === 0) {
+							return 1
+						} else {
+							return n * makeFactorial(makeFactorial)(n - 1)
+						}
+					}
+				})(
+					(makeFactorial) => {
+						return (n) => {
+							if (n === 0) {
+								return 1
+							} else {
+								return n * makeFactorial(makeFactorial)(n - 1)
+							}
+						}
+					}
+				)(n - 1)
+		}
+	})(0)
+```
+
+Does this seem familiar?
+- Yeah, its the same structure that we started with, applied to a smaller input
+```javascript
+1 * reducedStructure(0)
+```
+- Since we already established that `reducedStructure(0)` evaluates to `1`, we can conclude that `reducedStructure(1)` evaluates to `1 * 1 => 1`
+
+Can you try evaluating the same for input n = 2?
+(Please try this on paper)
+
+Did you actually do it?
+- Yes, it seems that no new structures appear and it self replicates until it reaches the base case at which point recursion ends and we get the output
+
+Did we cook recursion at home?
+- Yes, yes we did, YAYYYY
+
+- But can we do this for any recursive pattern instead of just factorial?
+
+Yes, I recommend you check out [The Little Schemer](https://mitpress.mit.edu/9780262560993/the-little-schemer/)
+Thank you Daniel P. Friedman and Matthias Felleisen
+
+Is everything a function?
+Always has been
