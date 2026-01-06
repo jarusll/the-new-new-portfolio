@@ -55,7 +55,7 @@ Does that mean we have `factorial0`?
 - Yes, as long as we never reach the recursive case
 
 ---
-Side-note - Infinity
+### Side note: `Infinity`
 To keep the focus of this write up on Recursion, we will assume that Infinity is just a function that never produces a value.
 ```javascript
 const infinity = () => {
@@ -200,7 +200,7 @@ Can we reduce it further?
   }
 }
 ```
-- Ayyyy, that's looks exactly like `factorial0`
+- That looks exactly like `factorial0`
 
 Correct, So can we write `factorialLessThanOrEqualTo1` using `makeFactorial` as the following?
 ```javascript
@@ -249,12 +249,7 @@ What about `factorialLessThanOrEqualTo2`?
 ```
 
 So is recursion a bunch of pending operations stacked on top of each other?
-- True
-
-| factorial(0) |
-| factorial(1) |
-| factorial(2) |
-| factorial(3) |
+- True while executing
 
 - That does work but how far can we keep going? We wouldn't want to manually compose `makeFactorial` to get `factorialLessThanEqualToN`
 
