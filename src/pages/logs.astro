@@ -22,7 +22,7 @@ const { title, description } = Astro.props
   <BaseHead title={title} description={description} slot="head" />
   <div class="page-content">
     <GradientMask />
-    <div>
+    <div class="header-container">
       <Header />
     </div>
     <main>
@@ -156,5 +156,9 @@ const { title, description } = Astro.props
 
   .placeholder {
     height: 3rem;
+  }
+
+  .header-container {
+    margin-bottom: 1rem;
   }
 </style>
