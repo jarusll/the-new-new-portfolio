@@ -3,6 +3,13 @@ title: "2026"
 pubDate: 2026-01-01
 ---
 
+# 2026-03-05
+I was doing things wrong by using my host compiler(x86_64) to target i386. I fixed it by compiling `i686-gcc`.
+
+The debugging issue at ASM boundary was gdb losing control at bios interrupts, I read it happens because gdb cannot handle segments ie CS:IP and uses $eip. I am going to keep it very simple and set breakpoints right after each interrupt.
+
+[https://youtu.be/IOn6JxW60HQ?t=423&si=3cJVFbDH-BiUonJ9](https://youtu.be/IOn6JxW60HQ?t=423&si=3cJVFbDH-BiUonJ9)
+
 # 2026-03-02
 Hello friend, I've been busy. I have a toy kernel up and running, printing 80x25.
 I am making a command interface using the IBM PC BIOS.
