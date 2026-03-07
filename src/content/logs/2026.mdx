@@ -3,6 +3,11 @@ title: "2026"
 pubDate: 2026-01-01
 ---
 
+# 2026-03-07
+Hey, I had issues for io for inlined asm. I decided to give up on 16 bit and directly boot in 64 bit. I did so because I couldn't get things working well in 16 bit and gdb would give disassembly errors. I did not know if I was doing things well and it makes sense to leave behind legacy baggage.
+
+I was able to boot into 64 bit using [limine](https://codeberg.org/Limine/Limine). My current target is to make a command shell.
+
 # 2026-03-05
 I was doing things wrong by using my host compiler(x86_64) to target i386. I fixed it by compiling `i686-gcc`.
 
